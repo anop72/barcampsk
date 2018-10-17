@@ -33,47 +33,11 @@ if (!(CHANNEL_ID && CHANNEL_SECRET && CHANNEL_TOKEN)) {
 
 app.post('/webhook', function(req, res) {
   if (req.body && req.body.events && req.body && req.body.events.length > 0) {
-    let replyToken = req.body.events[0]["replyToken"];
-    let replySameMessage = req.body.events[0]["message"].text;
-    let message = {
-      replyToken: replyToken,
-      messages: [
-        {
-          type: "template",
-          altText: "this is a buttons template",
-          template: {
-            type: "buttons",
-            actions: [
-              {
-                type: "message",
-                label: "Ticket",
-                text: "https://www.zipeventapp.com/e/BarCamp-Songkhla-5"
-              },
-              {
-                type: "message",
-                label: "Facebook",
-                text: "https://www.facebook.com/BarcampSongkhla"
-              },
-              {
-                type: "message",
-                label: "Twitter",
-                text: "https://twitter.com/barcampsongkhla"
-              },
-              {
-                type: "uri",
-                label: "Location",
-                uri: "line://app/102"
-              }
-            ],
-            thumbnailImageUrl: "https://zipimg.azureedge.net/images/events/6AD6645D-9E88-4A01-ADB4-A7D5EB6FA922/584B388F-2B37-4245-820C-B472B1F7EC04.jpg",
-            title: "Barcamp SongKhla 5",
-            text: "#barcampsk"
-          }
-        }
-      ]
-    }
 
-    callReplyAPI(message)
+    let replyToken = req.body.events[0]["replyToken"];
+    let senderUserId = req.body.events[0]["source"].userId;
+
+    replyApi(replyToken, welcomeTemplate())
 
   }
 
@@ -81,11 +45,52 @@ app.post('/webhook', function(req, res) {
 
 });
 
+let welcomeTemplate = () => {
+  return {
+    type: "template",
+    altText: "new message incoming..",
+    template: {
+      type: "buttons",
+      actions: [
+        {
+          type: "message",
+          label: "Ticket",
+          text: "https://www.zipeventapp.com/e/BarCamp-Songkhla-5"
+        },
+        {
+          type: "message",
+          label: "Facebook",
+          text: "https://www.facebook.com/BarcampSongkhla"
+        },
+        {
+          type: "message",
+          label: "Twitter",
+          text: "https://twitter.com/barcampsongkhla"
+        },
+        {
+          type: "uri",
+          label: "Location",
+          uri: "line://app/102"
+        }
+      ],
+      thumbnailImageUrl: "https://zipimg.azureedge.net/images/events/6AD6645D-9E88-4A01-ADB4-A7D5EB6FA922/584B388F-2B37-4245-820C-B472B1F7EC04.jpg",
+      title: "Barcamp Songkhla 5",
+      text: "#barcampsk"
+    }
+  }
+}
+
 function verifyRequestSignature(req, res, buf) {
   let signature = req.headers["x-line-signature"];
 }
 
-function callReplyAPI(message) {
+function replyApi(replyToken, message) {
+
+  let data = {
+    replyToken: replyToken,
+    messages: [message]
+  }
+
   request({
     method: 'POST',
     uri: 'https://api.line.me/v2/bot/message/reply',
@@ -93,7 +98,7 @@ function callReplyAPI(message) {
       'Content-type': '	application/json',
       'Authorization': 'Bearer ' + CHANNEL_TOKEN
     },
-    json: message
+    json: data
   },(error, response, body) => {
 
     if (error) console.error(error)
