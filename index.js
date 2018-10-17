@@ -106,6 +106,28 @@ function replyApi(replyToken, message) {
   })
 }
 
+function pushApi(id, message) {
+
+  let data = {
+    to: id,
+    messages: [message]
+  }
+
+  request({
+    method: 'POST',
+    uri: 'https://api.line.me/v2/bot/message/push',
+    headers: {
+      'Content-type': '	application/json',
+      'Authorization': 'Bearer ' + CHANNEL_TOKEN
+    },
+    json: data
+  },(error, response, body) => {
+
+    if (error) console.error(error)
+
+  })
+}
+
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
