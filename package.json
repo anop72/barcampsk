@@ -1,0 +1,32 @@
+{
+  "name": "barcampsk",
+  "version": "1.0.0",
+  "description": "line api",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "lint": "jshint --exclude node_modules .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anop72/barcampsk.git"
+  },
+  "keywords": [
+    "line",
+    "bot",
+    "sdk",
+    "node",
+    "messaging",
+    "api"
+  ],
+  "author": "anop72",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "1.18.3",
+    "config": "2.0.1",
+    "ejs": "2.6.1",
+    "express": "4.16.4",
+    "request": "2.88.0"
+  }
+}
