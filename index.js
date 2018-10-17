@@ -48,6 +48,21 @@ app.post('/webhook', function(req, res) {
                 type: "message",
                 label: "Ticket",
                 text: "https://www.zipeventapp.com/e/BarCamp-Songkhla-5"
+              },
+              {
+                type: "message",
+                label: "Facebook",
+                text: "https://www.facebook.com/BarcampSongkhla"
+              },
+              {
+                type: "message",
+                label: "Twitter",
+                text: "https://twitter.com/barcampsongkhla"
+              },
+              {
+                type: "uri",
+                label: "Location",
+                uri: "line://app/102"
               }
             ],
             thumbnailImageUrl: "https://zipimg.azureedge.net/images/events/6AD6645D-9E88-4A01-ADB4-A7D5EB6FA922/584B388F-2B37-4245-820C-B472B1F7EC04.jpg",
