@@ -31,9 +31,9 @@ if (!(CHANNEL_ID && CHANNEL_SECRET && CHANNEL_TOKEN)) {
   process.exit(1);
 }
 
-const eventType = {
-  message: 'message',
-  postback: 'postback'
+const EVENT_TYPE = {
+  MESSAGE: 'message',
+  POSTBACK: 'postback'
 }
 
 app.post('/webhook', function(req, res) {
@@ -46,7 +46,7 @@ app.post('/webhook', function(req, res) {
 
     //addLiffApp()
 
-    (eventType.message === event.type) ? replyApi(replyToken, welcomeTemplate()) : replyApi(replyToken, topicMessages())
+    (EVENT_TYPE.MESSAGE === event.type) ? replyApi(replyToken, welcomeTemplate()) : replyApi(replyToken, topicMessages())
 
   }
 
