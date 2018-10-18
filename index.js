@@ -31,13 +31,22 @@ if (!(CHANNEL_ID && CHANNEL_SECRET && CHANNEL_TOKEN)) {
   process.exit(1);
 }
 
+const eventType = {
+  message: 'message',
+  postback: 'postback'
+}
+
 app.post('/webhook', function(req, res) {
   if (req.body && req.body.events && req.body && req.body.events.length > 0) {
+
+    let event = req.body.events[0]
 
     let replyToken = req.body.events[0]["replyToken"];
     let senderUserId = req.body.events[0]["source"].userId;
 
-    replyApi(replyToken, welcomeTemplate())
+    //addLiffApp()
+
+    (eventType.message === event.type) ? replyApi(replyToken, welcomeTemplate()) : replyApi(replyToken, topicMessages())
 
   }
 
@@ -58,24 +67,73 @@ let welcomeTemplate = () => {
           text: "https://www.zipeventapp.com/e/BarCamp-Songkhla-5"
         },
         {
+          type: "postback",
+          label: "Invited Topic",
+          data: "selected-topic"
+        },
+        {
           type: "message",
           label: "Facebook",
           text: "https://www.facebook.com/BarcampSongkhla"
         },
         {
-          type: "message",
-          label: "Twitter",
-          text: "https://twitter.com/barcampsongkhla"
-        },
-        {
           type: "uri",
           label: "Location",
-          uri: "line://app/102"
+          uri: "line://app/1615319033-WyRmpxzR"
         }
       ],
       thumbnailImageUrl: "https://zipimg.azureedge.net/images/events/6AD6645D-9E88-4A01-ADB4-A7D5EB6FA922/584B388F-2B37-4245-820C-B472B1F7EC04.jpg",
       title: "Barcamp Songkhla 5",
       text: "#barcampsk"
+    }
+  }
+}
+
+let topicMessages = () => {
+  return {
+    "type": "template",
+    "altText": "this is a carousel template",
+    "template": {
+      "type": "carousel",
+      "actions": [],
+      "columns": [
+        {
+          "thumbnailImageUrl": "https://www.trendy2.mobi/wp-content/uploads/ais-logo.jpg",
+          "title": "Digital Disruption & Transformation",
+          "text": "AIS",
+          "actions": [
+            {
+              "type": "message",
+              "label": "Vote",
+              "text": "Voted"
+            }
+          ]
+        },
+        {
+          "thumbnailImageUrl": "https://s3-ap-southeast-1.amazonaws.com/photo.wongnai.com/photos/2016/02/04/ac426b52d74b473bb3e93967749f8f82.jpg",
+          "title": "Building a Wongnai Search",
+          "text": "Wongnai",
+          "actions": [
+            {
+              "type": "message",
+              "label": "Vote",
+              "text": "Voted"
+            }
+          ]
+        },
+        {
+          "thumbnailImageUrl": "https://is5-ssl.mzstatic.com/image/thumb/Purple115/v4/00/ee/17/00ee1790-6ca7-dc0d-5e7c-816a222b2221/source/512x512bb.jpg",
+          "title": "Introduction to LINE Messaging API",
+          "text": "Fungjai",
+          "actions": [
+            {
+              "type": "message",
+              "label": "Vote",
+              "text": "Voted"
+            }
+          ]
+        }
+      ]
     }
   }
 }
@@ -126,6 +184,33 @@ function pushApi(id, message) {
     if (error) console.error(error)
 
   })
+}
+
+let addLiffApp = () => { // Location app
+
+  let data = {
+    view: {
+      type: "compact",
+      url: "https://goo.gl/maps/5sfkfM4piux"
+    }
+  }
+
+  request({
+    method: 'POST',
+    uri: 'https://api.line.me/liff/v1/apps',
+    headers: {
+      'Content-type': '	application/json',
+      'Authorization': 'Bearer ' + CHANNEL_TOKEN
+    },
+    json: data
+  },(error, response, body) => {
+
+    if (error) console.error(error)
+
+    console.log(body);
+
+  })
+
 }
 
 app.listen(app.get('port'), function() {
